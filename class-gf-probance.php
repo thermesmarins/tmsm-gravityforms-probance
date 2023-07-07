@@ -934,11 +934,12 @@ class GFProbance extends GFFeedAddOn {
             }
 
         // Set a value to the optin flag for Probance
-            if (!empty($field_value)) {
+            if ($field_value == '0' || $field_value == '1' ) {
                 $merge_vars[$name] = $field_value;
-            } else {
-                $merge_vars[$name] = '0' ;
             }
+//            else {
+//                $merge_vars[$name] = '0' ;
+//            }
 
         }
 
