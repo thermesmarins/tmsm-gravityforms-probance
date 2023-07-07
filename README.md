@@ -7,7 +7,7 @@ Gravity Forms Add-on requires Gravity Forms 1.9.12
 
 * Settings Page with Username and Password
 * Process Feed to Add a Contact in Probance with API 
-* Map Fields 
+* Map Fields and Consent
 
 
 Requires:
