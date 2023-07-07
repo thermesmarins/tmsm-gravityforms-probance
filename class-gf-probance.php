@@ -688,24 +688,24 @@ class GFProbance extends GFFeedAddOn {
                 array(
                     'name'     => 'updateContact',
                     'label'    => esc_html__( 'Update Contact', 'sometextdomain' ),
-                    'type'     => 'checkbox_and_select',
-                    'checkbox' => array(
-                        'name'  => 'updateContactEnable',
-                        'label' => esc_html__( 'Update Contact if already exists', 'sometextdomain' ),
-                    ),
-                    'select'   => array(
-                        'name'    => 'updateContactAction',
-                        'choices' => array(
-                            array(
-                                'label' => esc_html__( 'and replace existing data', 'sometextdomain' ),
-                                'value' => 'replace'
-                            ),
-                            array(
-                                'label' => esc_html__( 'and append new data', 'sometextdomain' ),
-                                'value' => 'append'
-                            )
-                        )
-                    )
+                    'type'     => 'radio',
+//                    'checkbox' => array(
+//                        'name'  => 'updateContactEnable',
+//                        'label' => esc_html__( 'Update Contact if already exists', 'sometextdomain' ),
+//                    ),
+//                    'select'   => array(
+//                        'name'    => 'updateContactAction',
+//                        'choices' => array(
+//                            array(
+//                                'label' => esc_html__( 'and replace existing data', 'sometextdomain' ),
+//                                'value' => 'replace'
+//                            ),
+//                            array(
+//                                'label' => esc_html__( 'and append new data', 'sometextdomain' ),
+//                                'value' => 'append'
+//                            )
+//                        )
+//                    )
                 )
             )
         );
@@ -937,10 +937,6 @@ class GFProbance extends GFFeedAddOn {
             if ($field_value == '0' || $field_value == '1' ) {
                 $merge_vars[$name] = $field_value;
             }
-//            else {
-//                $merge_vars[$name] = '0' ;
-//            }
-
         }
 
 		// Define initial member, member found and member status variables.
@@ -1001,13 +997,15 @@ class GFProbance extends GFFeedAddOn {
 			return;
 		}
 		// If member status is not defined, set to subscribed.
-		$member_status = isset( $member_status ) ? $member_status : 'subscribed';
+//		$member_status = isset( $member_status ) ? $member_status : 'subscribed';
 		// Prepare transaction type for filter.
-		$transaction = $member_found ? 'Update' : 'Subscribe';
+//		$transaction = $member_found ? 'Update' : 'Subscribe';
 
 		$action = $member_found ? 'update' : 'create';
-        // Auto update date for Probance. // TODO see if i can change for the registered value
-        $merge_vars['registration_date'] = date('Y-m-d');
+        // Auto update date for Probance. // TODO essai de la fonction avec l'email (test@testt.fr) pour le changement de date
+        if ( !$member_found) {
+            $merge_vars['registration_date'] = date('Y-m-d');
+        }
 		// Prepare request parameters.
 		$params = array(
                         $merge_vars,
