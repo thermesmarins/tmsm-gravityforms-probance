@@ -13,7 +13,7 @@
  * Author URI:        https://github.com/aflamentTM
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       tmsm-gravityforms-probance-old
+ * Text Domain:       tmsm-gravityforms-probance
  * Domain Path:       /languages
  * Github Plugin URI: https://github.com/aflamentTM/tmsm-gravityforms-probance
  * Github Branch:     master

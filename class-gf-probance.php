@@ -25,7 +25,7 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @since  1.0.0
 	 * @access protected
-	 * @var    string $_version Contains the version, defined from tmsm-gravityforms-probance-old.php
+	 * @var    string $_version Contains the version, defined from tmsm-gravityforms-probance.php
 	 */
 	protected $_version = GF_PROBANCE_VERSION;
 
@@ -45,7 +45,7 @@ class GFProbance extends GFFeedAddOn {
 	 * @access protected
 	 * @var    string $_slug The slug used for this plugin.
 	 */
-	protected $_slug = 'tmsm-gravityforms-probance-old';
+	protected $_slug = 'tmsm-gravityforms-probance';
 
 	/**
 	 * Defines the main plugin file.
@@ -54,7 +54,7 @@ class GFProbance extends GFFeedAddOn {
 	 * @access protected
 	 * @var    string $_path The path to the main plugin file, relative to the plugins folder.
 	 */
-	protected $_path = 'tmsm-gravityforms-tmsm-gravityforms-probance-old.php';
+	protected $_path = 'tmsm-gravityforms-tmsm-gravityforms-probance.php';
 
 	/**
 	 * Defines the full path to this class file.
@@ -265,13 +265,13 @@ class GFProbance extends GFFeedAddOn {
 				'fields'      => array(
 					array(
 						'name'  => 'username',
-						'label' => esc_html__( 'Probance Username', 'tmsm-gravityforms-probance-old' ),
+						'label' => esc_html__( 'Probance Username', 'tmsm-gravityforms-probance' ),
 						'type'  => 'text',
 						'class' => 'medium',
 					),
 					array(
 						'name'              => 'password',
-						'label'             => esc_html__( 'Probance Password', 'tmsm-gravityforms-probance-old' ),
+						'label'             => esc_html__( 'Probance Password', 'tmsm-gravityforms-probance' ),
 						'type'              => 'text',
 						'class'             => 'medium',
 						'feedback_callback' => array( $this, 'initialize_api' ),
@@ -297,18 +297,18 @@ class GFProbance extends GFFeedAddOn {
 
 		return array(
 			array(
-				'title'  => esc_html__( 'Probance Feed Settings', 'tmsm-gravityforms-probance-old' ),
+				'title'  => esc_html__( 'Probance Feed Settings', 'tmsm-gravityforms-probance' ),
 				'fields' => array(
 					array(
 						'name'     => 'feedName',
-						'label'    => esc_html__( 'Name', 'tmsm-gravityforms-probance-old' ),
+						'label'    => esc_html__( 'Name', 'tmsm-gravityforms-probance' ),
 						'type'     => 'text',
 						'required' => true,
 						'class'    => 'medium',
 						'tooltip'  => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Name', 'tmsm-gravityforms-probance-old' ),
-							esc_html__( 'Enter a feed name to uniquely identify this setup.', 'tmsm-gravityforms-probance-old' )
+							esc_html__( 'Name', 'tmsm-gravityforms-probance' ),
+							esc_html__( 'Enter a feed name to uniquely identify this setup.', 'tmsm-gravityforms-probance' )
 						),
 
 					),
@@ -321,37 +321,37 @@ class GFProbance extends GFFeedAddOn {
 				'fields'     => array(
 					array(
 						'name'      => 'mappedFields',
-						'label'     => esc_html__( 'Map Fields', 'tmsm-gravityforms-probance-old' ),
+						'label'     => esc_html__( 'Map Fields', 'tmsm-gravityforms-probance' ),
 						'type'      => 'field_map',
 						'field_map' => $this->merge_vars_field_map(),
 						'tooltip'   => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Map Fields', 'tmsm-gravityforms-probance-old' ),
+							esc_html__( 'Map Fields', 'tmsm-gravityforms-probance' ),
 							esc_html__( 'Associate your Probance merge tags to the appropriate Gravity Form fields by selecting the appropriate form field from the list.',
-								'tmsm-gravityforms-probance-old' )
+								'tmsm-gravityforms-probance' )
 						),
 					),
                     // Get the optin fields and what to map with in gravity forms ( for conditional logic ? )
 					array(
 						'name'      => 'optin_flag',
-						'label'     => esc_html__( 'Map Optins', 'tmsm-gravityforms-probance-old' ),
+						'label'     => esc_html__( 'Map Optins', 'tmsm-gravityforms-probance' ),
 						'type'      => 'field_map',
 						'field_map' => $this->merge_vars_optin_map(),
 						'tooltip'   => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Map Optins', 'tmsm-gravityforms-probance-old' ),
+							esc_html__( 'Map Optins', 'tmsm-gravityforms-probance' ),
 							esc_html__( 'Associate your Probance optins to the appropriate Gravity Form fields by selecting the appropriate form field from the list.',
-								'tmsm-gravityforms-probance-old' )
+								'tmsm-gravityforms-probance' )
 						),
 					),
                     // Conditional logic to purchase the api call to Probance
 					array(
 						'name'    => 'optinCondition',
-						'label'   => esc_html__( 'Conditional Logic', 'tmsm-gravityforms-probance-old' ),
+						'label'   => esc_html__( 'Conditional Logic', 'tmsm-gravityforms-probance' ),
 						'type'    => 'feed_condition',
 						'tooltip' => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Conditional Logic', 'tmsm-gravityforms-probance-old' ),
+							esc_html__( 'Conditional Logic', 'tmsm-gravityforms-probance' ),
 							esc_html__( 'When conditional logic is enabled, form submissions will only be exported to Probance when the conditions are met. When disabled all form submissions will be exported.',
 								'tmsm-gravityforms-dialoginsight' )
 						),
@@ -377,34 +377,34 @@ class GFProbance extends GFFeedAddOn {
 		return $merge_fields = array(
             array(
             'name'          => 'email',
-            'label'         => esc_html__( 'Email Address', 'tmsm-gravityforms-probance-old' ),
+            'label'         => esc_html__( 'Email Address', 'tmsm-gravityforms-probance' ),
             'required'      => true,
             'field_type'    => array( 'email',  'hidden'),
             'default_value' => $this->get_first_field_by_type( 'EMail' ),
         ),
             array(
                 'name'          => 'name1',
-                'label'         => esc_html__( 'Last Name', 'tmsm-gravityforms-probance-old' ),
+                'label'         => esc_html__( 'Last Name', 'tmsm-gravityforms-probance' ),
                 'required'      => false,
                 'field_type'    => array( 'name', 'text', 'hidden' ),
                 'default_value' => $this->get_first_field_by_type( 'name', 3 ),
             ),
             array(
                 'name'          => 'name2',
-                'label'         => esc_html__( 'First Name', 'tmsm-gravityforms-probance-old' ),
+                'label'         => esc_html__( 'First Name', 'tmsm-gravityforms-probance' ),
                 'required'      => false,
                 'field_type'    => array( 'name', 'text', 'hidden' ),
                 'default_value' => $this->get_first_field_by_type( 'name', 6 ),
             ),
             array(
                 'name'          => "gender",
-                'label'         => esc_html__( 'Gender', 'tmsm-gravityforms-probance-old' ),
+                'label'         => esc_html__( 'Gender', 'tmsm-gravityforms-probance' ),
                 'required'      => false,
                 'field_type'    => array( 'radio', 'text', 'hidden' ),
             ),
             array(
                 'name'          => "birthday",
-                'label'         => esc_html__( 'Birthday', 'tmsm-gravityforms-probance-old' ),
+                'label'         => esc_html__( 'Birthday', 'tmsm-gravityforms-probance' ),
                 'required'      => false,
                 'field_type'    => array( 'date', 'text', 'hidden' ),
             ),
@@ -739,7 +739,7 @@ class GFProbance extends GFFeedAddOn {
 	public function feed_list_columns() {
 
 		return array(
-			'feedName' => esc_html__( 'Name', 'tmsm-gravityforms-probance-old' ),
+			'feedName' => esc_html__( 'Name', 'tmsm-gravityforms-probance' ),
 		);
 
 	}
@@ -833,13 +833,13 @@ class GFProbance extends GFFeedAddOn {
 
 		// If unable to initialize API, log error and return.
 		if ( ! $this->initialize_api() ) {
-			$this->add_feed_error( esc_html__( 'Unable to process feed because API could not be initialized.', 'tmsm-gravityforms-probance-old' ),
+			$this->add_feed_error( esc_html__( 'Unable to process feed because API could not be initialized.', 'tmsm-gravityforms-probance' ),
 				$feed, $entry, $form );
 
 			$email = wp_mail(
 				get_option( 'admin_email' ),
-				wp_specialchars_decode( sprintf( __('TMSM Gravity Forms Dialog Insight on %s: API not initialized', 'tmsm-gravityforms-probance-old'), get_option( 'blogname' ) ) ),
-				wp_specialchars_decode( sprintf( __('TMSM Gravity Forms Dialog Insight on %s: API not initialized', 'tmsm-gravityforms-probance-old'), get_option( 'blogname' ) ) )
+				wp_specialchars_decode( sprintf( __('TMSM Gravity Forms Dialog Insight on %s: API not initialized', 'tmsm-gravityforms-probance'), get_option( 'blogname' ) ) ),
+				wp_specialchars_decode( sprintf( __('TMSM Gravity Forms Dialog Insight on %s: API not initialized', 'tmsm-gravityforms-probance'), get_option( 'blogname' ) ) )
 			);
 
 			return $entry;
@@ -859,7 +859,7 @@ class GFProbance extends GFFeedAddOn {
 
 		// If email address is invalid, log error and return.
 		if ( GFCommon::is_invalid_or_empty_email( $email ) ) {
-			$this->add_feed_error( esc_html__( 'A valid Email address must be provided.', 'tmsm-gravityforms-probance-old' ), $feed, $entry, $form );
+			$this->add_feed_error( esc_html__( 'A valid Email address must be provided.', 'tmsm-gravityforms-probance' ), $feed, $entry, $form );
 
 			return $entry;
 		}
@@ -968,7 +968,7 @@ class GFProbance extends GFFeedAddOn {
 
 				// Log that we could not get the member information.
 				$this->add_feed_error( sprintf( esc_html__( 'Unable to check if email address is already used by a member: %s',
-					'tmsm-gravityforms-probance-old' ), $e->getMessage() ), $feed, $entry, $form );
+					'tmsm-gravityforms-probance' ), $e->getMessage() ), $feed, $entry, $form );
 
 				return $entry;
 
@@ -996,15 +996,13 @@ class GFProbance extends GFFeedAddOn {
 
 			return;
 		}
-		// If member status is not defined, set to subscribed.
-//		$member_status = isset( $member_status ) ? $member_status : 'subscribed';
-		// Prepare transaction type for filter.
-//		$transaction = $member_found ? 'Update' : 'Subscribe';
 
 		$action = $member_found ? 'update' : 'create';
         // Auto update date for Probance. // TODO essai de la fonction avec l'email (test@testt.fr) pour le changement de date
         if ( !$member_found) {
+            error_log('date : ');
             $merge_vars['registration_date'] = date('Y-m-d');
+            error_log(print_r($merge_vars, true));
         }
 		// Prepare request parameters.
 		$params = array(
@@ -1028,7 +1026,7 @@ class GFProbance extends GFFeedAddOn {
 		} catch ( Exception $e ) {
 
 			// Log that subscription could not be added or updated.
-			$this->add_feed_error( sprintf( esc_html__( 'Unable to add/update subscriber: %s', 'tmsm-gravityforms-probance-old' ),
+			$this->add_feed_error( sprintf( esc_html__( 'Unable to add/update subscriber: %s', 'tmsm-gravityforms-probance' ),
 				$e->getMessage() ), $feed, $entry, $form );
 
 			// Log field errors.
