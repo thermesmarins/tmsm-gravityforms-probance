@@ -70,28 +70,6 @@ class GF_Probance_API {
 		return $this->process_request();
 
 	}
-	/**
-	 * Get a specific Probance list member.
-	 *
-	 * @since  1.0.0
-	 * @access public
-	 *
-	 * @param string $list_id       Probance list ID.
-	 * @param string $email_address Email address.
-	 *
-	 * @uses   GF_Probance_API::process_request()
-	 * @throws Exception
-	 *
-	 * @return array
-	 */
-	public function get_list_member( $list_id, $email_address ) {
-
-//		 Prepare subscriber hash.
-		$subscriber_hash = md5( strtolower( $email_address ) );
-
-		return $this->process_request( 'lists/' . $list_id . '/members/' . $subscriber_hash );
-
-	}
     /**
 	 * Get a specific Probance list member.
 	 *
@@ -123,7 +101,7 @@ class GF_Probance_API {
 	 *
 	 * @return array
 	 */
-	public function update_list_member( $action, $params ) {
+	public function update_list_member( $params, $action ) {
         error_log('PARAMS :');
         error_log(print_r($params, true));
 //		$response = $this->process_request( 'Contacts', 'Merge', $params );
@@ -160,82 +138,58 @@ class GF_Probance_API {
 			throw new Exception( 'password must be defined to process an API request.' );
 		}
 
-        if(rgblank($service )) {
-            $service = 'search';
-        }
-        if ($service == 'update') {
-            $request_url = $this->webservice_url . $service .'?email=' . $data['email'] ;
-        } else {
-            // Build base request URL.
-            $request_url = $this->webservice_url . $service ;
-        }
+		if ($service == 'update'|| $service == 'search')
+        {
+            $request_url = $this->webservice_url . $service .'?email=' . $data['email'];
 
+        } else
+         {
+            // Build base request URL.
+            $request_url = $this->webservice_url . $service;
+
+        }
 
 //         Set credentials for Basic Authentication
         $credentials = base64_encode("$this->username:$this->password");
+		$headers = array(
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => "Basic {$credentials}",
+        );
         error_log(print_r($request_url, true));
-        $body = array();
-        error_log(print_r($body, true));
         error_log('%%%% METHOD %%% :');
         error_log(print_r($method, true));
-        // Build base request arguments.
-        if($method == 'GET') {
-            $args = array(
-                'body' => $data,
-                'headers' => array(
-                    'method' => $method,
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    "Authorization" => "Basic {$credentials}",
-                ),
-                'sslverify' => apply_filters('https_local_ssl_verify', false),
-                'timeout' => apply_filters('http_request_timeout', 30),
-            );
-            $response = wp_remote_request($request_url, $args);
-        } else {
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $request_url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Authorization: Basic '.$credentials ,
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-            $response = curl_exec($ch);
-
-            curl_close($ch);
-            error_log(print_r($response,true));
-        // TODO Voir pour la gestion des erreurs !
-        // TODO Faire un essai avec les fonction wp
-
-//            $args = array(
-//                'body'=>  $data,
-//                'headers' => array(
-//                    'method' => 'POST',
-//                    'Accept' => 'application/json',
-//                    'Content-Type' => 'application/json',
-//                    "Authorization" => "Basic {$credentials}",
-//                ),
-
-//                'sslverify' => apply_filters('https_local_ssl_verify', false),
-//                'timeout' => apply_filters('http_request_timeout', 30),
-//            );
-
-//            $response = wp_remote_post($request_url, $args);
-        }
-
-//        error_log(print_r($args, true));
-		// Get request response.
-//        $response = wp_remote_request($request_url, $args);
-//        error_log(print_r(wp_remote_request($request_url, $args), true));
-//            error_log('URL !');
-//            error_log(print_r($request_url, true));
-//            error_log(print_r($response, true));
-
+		if ($method != 'GET') {
+			           error_log('DATA POST');
+			           error_log(print_r($data, true));
+						$json_data = json_encode($data);
+			           error_log('$json_data');
+			           error_log($json_data);
+			
+						$response = wp_remote_request(
+							$request_url,
+							array(
+								'method'  => $method,
+								'headers' => $headers,
+								'body'    => $json_data,
+								'sslverify' => apply_filters('https_local_ssl_verify', false),
+								'timeout' => apply_filters('http_request_timeout', 30),
+							));
+					} else {
+						// For 'GET' need to pass the method in the header
+						$method = array('method' => $method);
+						$headers = array_merge($headers , $method);
+						// Build base request arguments.
+						$args = array(
+							'headers' => $headers,
+							'sslverify' => apply_filters('https_local_ssl_verify', false),
+							'timeout' => apply_filters('http_request_timeout', 30),
+						);
+			           error_log('ARGS IN GET');
+			           error_log(print_r($args, true));
+						$response = wp_remote_request($request_url, $args);
+					}
 
 
 		// If request was not successful, throw exception.
@@ -245,26 +199,26 @@ class GF_Probance_API {
 		}
 
 		// Decode response body.
-//		$response['body'] = json_decode( $response['body'], true );
+		$response['body'] = json_decode( $response['body'], true );
 		// Get the response code.
 		$response_code = wp_remote_retrieve_response_code( $response );
 
-//		if ( $response_code != 200 ) {
+		if ( $response_code != 200 ) {
 
 			// If status code is set, throw exception.
-//			if ( isset( $response['body']['ErrorCode'] ) ) {
-//                // TODO changer l'Exception
-//				// Initialize exception.
-//				$exception = new GF_Probance_Exception( $response['body']['ErrorCode'], $response_code );
-//				$exception->setDetail( $response['body']['ErrorMessage'] );
-//				$exception->setErrors( $response['body']['ErrorMessage'] );
-//				throw $exception;
-//
-//			}
+			if ( isset( $response['body']['ErrorCode'] ) ) {
+               // TODO changer l'Exception
+				// Initialize exception.
+				$exception = new GF_Probance_Exception( $response['body']['ErrorCode'], $response_code );
+				$exception->setDetail( $response['body']['ErrorMessage'] );
+				$exception->setErrors( $response['body']['ErrorMessage'] );
+				throw $exception;
 
-//			throw new GF_Probance_Exception( wp_remote_retrieve_response_message( $response ), $response_code );
+			}
 
-//		}
+			throw new GF_Probance_Exception( wp_remote_retrieve_response_message( $response ), $response_code );
+
+		}
 
 //		if($response['body']['status'] != 'OK'){
 //		if($response['Success'] !== true){

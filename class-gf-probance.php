@@ -9,7 +9,8 @@ GFForms::include_feed_addon_framework();
  * @package   GravityForms
  * @author    Arnaud Flament
  */
-class GFProbance extends GFFeedAddOn {
+class GFProbance extends GFFeedAddOn
+{
 
 	/**
 	 * Contains an instance of this class, if available.
@@ -108,7 +109,7 @@ class GFProbance extends GFFeedAddOn {
 	 * @access protected
 	 * @var    array $_capabilities The capabilities needed for the Add-On
 	 */
-	protected $_capabilities = array( 'gravityforms_probance', 'gravityforms_probance_uninstall' );
+	protected $_capabilities = array('gravityforms_probance', 'gravityforms_probance_uninstall');
 
 	/**
 	 * Defines the capability needed to access the Add-On settings page.
@@ -163,14 +164,14 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return GFProbance
 	 */
-	public static function get_instance() {
+	public static function get_instance()
+	{
 
-		if ( null === self::$_instance ) {
+		if (null === self::$_instance) {
 			self::$_instance = new self;
 		}
 
 		return self::$_instance;
-
 	}
 
 	/**
@@ -181,19 +182,18 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @uses   GFAddOn::is_gravityforms_supported()
 	 */
-	public function pre_init() {
+	public function pre_init()
+	{
 
 		parent::pre_init();
 
-		if ( $this->is_gravityforms_supported() ) {
+		if ($this->is_gravityforms_supported()) {
 
 			// Load the Mailgun API library.
-			if ( ! class_exists( 'GF_Probance_API' ) ) {
+			if (!class_exists('GF_Probance_API')) {
 				require_once('includes/class-gf-probance-api.php');
 			}
-
 		}
-
 	}
 
 	/**
@@ -204,10 +204,10 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @uses   GFFeedAddOn::add_delayed_payment_support()
 	 */
-	public function init() {
+	public function init()
+	{
 
 		parent::init();
-
 	}
 
 	/**
@@ -216,14 +216,14 @@ class GFProbance extends GFFeedAddOn {
 	 * @since  1.0.0
 	 * @access public
 	 */
-	public function uninstall() {
+	public function uninstall()
+	{
 
 		parent::uninstall();
 
-		GFCache::delete( 'probance_plugin_settings' );
-		delete_option( 'gf_probance_settings' );
-		delete_option( 'gf_probance_version' );
-
+		GFCache::delete('probance_plugin_settings');
+		delete_option('gf_probance_settings');
+		delete_option('gf_probance_version');
 	}
 
 	/**
@@ -234,19 +234,19 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function styles() {
+	public function styles()
+	{
 
 		$styles = array(
 			array(
 				'handle'  => $this->_slug . '_form_settings',
 				'src'     => $this->get_base_url() . '/css/form_settings.css',
 				'version' => $this->_version,
-				'enqueue' => array( 'admin_page' => array( 'form_settings' ) ),
+				'enqueue' => array('admin_page' => array('form_settings')),
 			),
 		);
 
-		return array_merge( parent::styles(), $styles );
-
+		return array_merge(parent::styles(), $styles);
 	}
 
 	/**
@@ -257,7 +257,8 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function plugin_settings_fields() {
+	public function plugin_settings_fields()
+	{
 
 		return array(
 			array(
@@ -265,16 +266,16 @@ class GFProbance extends GFFeedAddOn {
 				'fields'      => array(
 					array(
 						'name'  => 'username',
-						'label' => esc_html__( 'Probance Username', 'tmsm-gravityforms-probance' ),
+						'label' => esc_html__('Probance Username', 'tmsm-gravityforms-probance'),
 						'type'  => 'text',
 						'class' => 'medium',
 					),
 					array(
 						'name'              => 'password',
-						'label'             => esc_html__( 'Probance Password', 'tmsm-gravityforms-probance' ),
+						'label'             => esc_html__('Probance Password', 'tmsm-gravityforms-probance'),
 						'type'              => 'text',
 						'class'             => 'medium',
-						'feedback_callback' => array( $this, 'initialize_api' ),
+						'feedback_callback' => array($this, 'initialize_api'),
 					),
 
 				),
@@ -282,7 +283,6 @@ class GFProbance extends GFFeedAddOn {
 
 
 		);
-
 	}
 
 	/**
@@ -293,22 +293,23 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function feed_settings_fields() {
+	public function feed_settings_fields()
+	{
 
 		return array(
 			array(
-				'title'  => esc_html__( 'Probance Feed Settings', 'tmsm-gravityforms-probance' ),
+				'title'  => esc_html__('Probance Feed Settings', 'tmsm-gravityforms-probance'),
 				'fields' => array(
 					array(
 						'name'     => 'feedName',
-						'label'    => esc_html__( 'Name', 'tmsm-gravityforms-probance' ),
+						'label'    => esc_html__('Name', 'tmsm-gravityforms-probance'),
 						'type'     => 'text',
 						'required' => true,
 						'class'    => 'medium',
 						'tooltip'  => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Name', 'tmsm-gravityforms-probance' ),
-							esc_html__( 'Enter a feed name to uniquely identify this setup.', 'tmsm-gravityforms-probance' )
+							esc_html__('Name', 'tmsm-gravityforms-probance'),
+							esc_html__('Enter a feed name to uniquely identify this setup.', 'tmsm-gravityforms-probance')
 						),
 
 					),
@@ -317,50 +318,56 @@ class GFProbance extends GFFeedAddOn {
 				),
 			),
 			array(
-                // Get all the fields to map with the gravity form fields
+				// Get all the fields to map with the gravity form fields
 				'fields'     => array(
 					array(
 						'name'      => 'mappedFields',
-						'label'     => esc_html__( 'Map Fields', 'tmsm-gravityforms-probance' ),
+						'label'     => esc_html__('Map Fields', 'tmsm-gravityforms-probance'),
 						'type'      => 'field_map',
 						'field_map' => $this->merge_vars_field_map(),
 						'tooltip'   => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Map Fields', 'tmsm-gravityforms-probance' ),
-							esc_html__( 'Associate your Probance merge tags to the appropriate Gravity Form fields by selecting the appropriate form field from the list.',
-								'tmsm-gravityforms-probance' )
+							esc_html__('Map Fields', 'tmsm-gravityforms-probance'),
+							esc_html__(
+								'Associate your Probance merge tags to the appropriate Gravity Form fields by selecting the appropriate form field from the list.',
+								'tmsm-gravityforms-probance'
+							)
 						),
 					),
-                    // Get the optin fields and what to map with in gravity forms ( for conditional logic ? )
+					// Get the optin fields and what to map with in gravity forms ( for conditional logic ? )
 					array(
 						'name'      => 'optin_flag',
-						'label'     => esc_html__( 'Map Optins', 'tmsm-gravityforms-probance' ),
+						'label'     => esc_html__('Map Optins', 'tmsm-gravityforms-probance'),
 						'type'      => 'field_map',
 						'field_map' => $this->merge_vars_optin_map(),
 						'tooltip'   => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Map Optins', 'tmsm-gravityforms-probance' ),
-							esc_html__( 'Associate your Probance optins to the appropriate Gravity Form fields by selecting the appropriate form field from the list.',
-								'tmsm-gravityforms-probance' )
+							esc_html__('Map Optins', 'tmsm-gravityforms-probance'),
+							esc_html__(
+								'Associate your Probance optins to the appropriate Gravity Form fields by selecting the appropriate form field from the list.',
+								'tmsm-gravityforms-probance'
+							)
 						),
 					),
-                    // Conditional logic to purchase the api call to Probance
+					// Conditional logic to purchase the api call to Probance
 					array(
 						'name'    => 'optinCondition',
-						'label'   => esc_html__( 'Conditional Logic', 'tmsm-gravityforms-probance' ),
+						'label'   => esc_html__('Conditional Logic', 'tmsm-gravityforms-probance'),
 						'type'    => 'feed_condition',
 						'tooltip' => sprintf(
 							'<h6>%s</h6>%s',
-							esc_html__( 'Conditional Logic', 'tmsm-gravityforms-probance' ),
-							esc_html__( 'When conditional logic is enabled, form submissions will only be exported to Probance when the conditions are met. When disabled all form submissions will be exported.',
-								'tmsm-gravityforms-dialoginsight' )
+							esc_html__('Conditional Logic', 'tmsm-gravityforms-probance'),
+							esc_html__(
+								'When conditional logic is enabled, form submissions will only be exported to Probance when the conditions are met. When disabled all form submissions will be exported.',
+								'tmsm-gravityforms-dialoginsight'
+							)
 						),
 					),
-//
-					array( 'type' => 'save' ),
-                )
-            )
-        );
+					//
+					array('type' => 'save'),
+				)
+			)
+		);
 	}
 
 
@@ -372,307 +379,47 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function merge_vars_field_map() {
+	public function merge_vars_field_map()
+	{
 		// Initialize field map array.
 		return $merge_fields = array(
-            array(
-            'name'          => 'email',
-            'label'         => esc_html__( 'Email Address', 'tmsm-gravityforms-probance' ),
-            'required'      => true,
-            'field_type'    => array( 'email',  'hidden'),
-            'default_value' => $this->get_first_field_by_type( 'EMail' ),
-        ),
-            array(
-                'name'          => 'name1',
-                'label'         => esc_html__( 'Last Name', 'tmsm-gravityforms-probance' ),
-                'required'      => false,
-                'field_type'    => array( 'name', 'text', 'hidden' ),
-                'default_value' => $this->get_first_field_by_type( 'name', 3 ),
-            ),
-            array(
-                'name'          => 'name2',
-                'label'         => esc_html__( 'First Name', 'tmsm-gravityforms-probance' ),
-                'required'      => false,
-                'field_type'    => array( 'name', 'text', 'hidden' ),
-                'default_value' => $this->get_first_field_by_type( 'name', 6 ),
-            ),
-            array(
-                'name'          => "gender",
-                'label'         => esc_html__( 'Gender', 'tmsm-gravityforms-probance' ),
-                'required'      => false,
-                'field_type'    => array( 'radio', 'text', 'hidden' ),
-            ),
-            array(
-                'name'          => "birthday",
-                'label'         => esc_html__( 'Birthday', 'tmsm-gravityforms-probance' ),
-                'required'      => false,
-                'field_type'    => array( 'date', 'text', 'hidden' ),
-            ),
+			array(
+				'name'          => 'email',
+				'label'         => esc_html__('Email Address', 'tmsm-gravityforms-probance'),
+				'required'      => true,
+				'field_type'    => array('email',  'hidden'),
+				'default_value' => $this->get_first_field_by_type('EMail'),
+			),
+			array(
+				'name'          => 'name1',
+				'label'         => esc_html__('Last Name', 'tmsm-gravityforms-probance'),
+				'required'      => false,
+				'field_type'    => array('name', 'text', 'hidden'),
+				'default_value' => $this->get_first_field_by_type('name', 3),
+			),
+			array(
+				'name'          => 'name2',
+				'label'         => esc_html__('First Name', 'tmsm-gravityforms-probance'),
+				'required'      => false,
+				'field_type'    => array('name', 'text', 'hidden'),
+				'default_value' => $this->get_first_field_by_type('name', 6),
+			),
+			array(
+				'name'          => "gender",
+				'label'         => esc_html__('Gender', 'tmsm-gravityforms-probance'),
+				'required'      => false,
+				'field_type'    => array('radio', 'text', 'hidden'),
+			),
+			array(
+				'name'          => "birthday",
+				'label'         => esc_html__('Birthday', 'tmsm-gravityforms-probance'),
+				'required'      => false,
+				'field_type'    => array('date', 'text', 'hidden'),
+			),
 
-        );
+		);
 	}
 
-//    TODO see if this is needed or just an exemple from Dialog insight
-    /**
-     * Fields set up from Probance use as an exemple to feed the fields from Probance
-     * @return array[] Of form fields
-     */
-    public function get_probance_fields() {
-       return $fields = array(
-
-            array(
-                'Code' => 'EMail',
-                'Labels'=> array(
-                    array(
-                        'Culture' => 'fr-CA',
-                        'Value' => 'Courriel',
-                        )
-                    ),
-                'DataType' => 'Email',
-                'Length' => '125',
-                'isRequired' => '1',
-                'isKey '=> '1'
-            ),
-
-            array(
-            'Code' => 'FirstName',
-            'Labels' => array(
-                    array(
-                        'Culture' => 'fr-CA',
-                        'Value' => 'Prénom',
-                        )
-                    ), '
-            DataType' => 'Text',
-            'Length' => '50',
-            'isRequired' => '0',
-            'isKey' => ''
-        ),
-        array(
-            'Code' => 'LastName',
-            'Labels' => array(
-                    array(
-                        'Culture' => 'fr-CA',
-                        'Value' => 'Nom',
-                        )
-                    ), '
-            DataType' => 'Text',
-            'Length' => '50',
-            'isRequired' => '0',
-            'isKey' => ''
-        ),
-//        array(
-//            'Code' => 'Address',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Adresse',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '50',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'Apartment',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Appartement',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '10',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//
-//        array(
-//            'Code' => 'City',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Ville',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '50',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'Province',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Province',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '25',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'Country',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Pays',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '25',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'PostalCode',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Code postal',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '7',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'HomePhone',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Téléphone maison',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '20',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'MobilePhone',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Téléphone cellulaire',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '20',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'Company',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Entreprise',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '100',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'Department',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Département',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '50',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'WebSite',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Site web',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '100',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'WorkPhone',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Téléphone travail',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '100',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'WorkPhoneExtention',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Téléphone travail extention',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '100',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'FacebookIdentifier',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Identifiant Facebook',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '50',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'TwitterIdentifier',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Identifiant Twitter',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '50',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-//        array(
-//            'Code' => 'LinkedInIdentifier',
-//            'Labels' => array(
-//                    array(
-//                        'Culture' => 'fr-CA',
-//                        'Value' => 'Identifiant LinkedIn',
-//                        )
-//                    ), '
-//            DataType' => 'Text',
-//            'Length' => '50',
-//            'isRequired' => '0',
-//            'isKey' => ''
-//        ),
-
-
-);
-    }
 	/**
 	 * Return an array of DialogInsight list optins which can be mapped to the Form fields/entry meta.
 	 *
@@ -681,36 +428,37 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function merge_vars_optin_map() {
-        $optin_map ['optin_flag']  =  array(
-            'name' => 'optin_flag',
-            'fields' => array(
-                array(
-                    'name'     => 'updateContact',
-                    'label'    => esc_html__( 'Update Contact', 'sometextdomain' ),
-                    'type'     => 'radio',
-//                    'checkbox' => array(
-//                        'name'  => 'updateContactEnable',
-//                        'label' => esc_html__( 'Update Contact if already exists', 'sometextdomain' ),
-//                    ),
-//                    'select'   => array(
-//                        'name'    => 'updateContactAction',
-//                        'choices' => array(
-//                            array(
-//                                'label' => esc_html__( 'and replace existing data', 'sometextdomain' ),
-//                                'value' => 'replace'
-//                            ),
-//                            array(
-//                                'label' => esc_html__( 'and append new data', 'sometextdomain' ),
-//                                'value' => 'append'
-//                            )
-//                        )
-//                    )
-                )
-            )
-        );
-        error_log('OPTiN MAP FUNCTION ???? %%%');
-        error_log(print_r($optin_map, true));
+	public function merge_vars_optin_map()
+	{
+		$optin_map['optin_flag']  =  array(
+			'name' => 'optin_flag',
+			'fields' => array(
+				array(
+					'name'     => 'updateContact',
+					'label'    => esc_html__('Update Contact', 'tmsm-gravityforms-probance'),
+					'type'     => 'radio',
+					//                    'checkbox' => array(
+					//                        'name'  => 'updateContactEnable',
+					//                        'label' => esc_html__( 'Update Contact if already exists', 'sometextdomain' ),
+					//                    ),
+					//                    'select'   => array(
+					//                        'name'    => 'updateContactAction',
+					//                        'choices' => array(
+					//                            array(
+					//                                'label' => esc_html__( 'and replace existing data', 'sometextdomain' ),
+					//                                'value' => 'replace'
+					//                            ),
+					//                            array(
+					//                                'label' => esc_html__( 'and append new data', 'sometextdomain' ),
+					//                                'value' => 'append'
+					//                            )
+					//                        )
+					//                    )
+				)
+			)
+		);
+		error_log('OPTiN MAP FUNCTION ???? %%%');
+		error_log(print_r($optin_map, true));
 		return $optin_map;
 	}
 
@@ -722,10 +470,10 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return bool
 	 */
-	public function can_create_feed() {
+	public function can_create_feed()
+	{
 
 		return $this->initialize_api();
-
 	}
 
 	/**
@@ -736,14 +484,14 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function feed_list_columns() {
+	public function feed_list_columns()
+	{
 
 		return array(
-			'feedName' => esc_html__( 'Name', 'tmsm-gravityforms-probance' ),
+			'feedName' => esc_html__('Name', 'tmsm-gravityforms-probance'),
 		);
-
 	}
-//TODO see if i can simplify this method ( maybe only add the consent type field to the conditional logic)
+	//TODO see if i can simplify this method ( maybe only add the consent type field to the conditional logic)
 	/**
 	 * Define which field types can be used for the group conditional logic.
 	 *
@@ -758,7 +506,8 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function get_conditional_logic_fields() {
+	public function get_conditional_logic_fields()
+	{
 
 		// Initialize conditional logic fields array.
 		$fields = array();
@@ -767,10 +516,10 @@ class GFProbance extends GFFeedAddOn {
 		$form = $this->get_current_form();
 
 		// Loop through the form fields.
-		foreach ( $form['fields'] as $field ) {
+		foreach ($form['fields'] as $field) {
 
 			// If this field does not support conditional logic, skip it.
-			if ( ! $field->is_conditional_logic_supported() ) {
+			if (!$field->is_conditional_logic_supported()) {
 				continue;
 			}
 
@@ -778,38 +527,33 @@ class GFProbance extends GFFeedAddOn {
 			$inputs = $field->get_entry_inputs();
 
 			// If field has multiple inputs, add them as individual field options.
-			if ( $inputs && 'checkbox' !== $field->get_input_type() ) {
+			if ($inputs && 'checkbox' !== $field->get_input_type()) {
 
 				// Loop through the inputs.
-				foreach ( $inputs as $input ) {
+				foreach ($inputs as $input) {
 
 					// If this is a hidden input, skip it.
-					if ( rgar( $input, 'isHidden' ) ) {
+					if (rgar($input, 'isHidden')) {
 						continue;
 					}
 
 					// Add input to conditional logic fields array.
 					$fields[] = array(
 						'value' => $input['id'],
-						'label' => GFCommon::get_label( $field, $input['id'] ),
+						'label' => GFCommon::get_label($field, $input['id']),
 					);
-
 				}
-
 			} else {
 
 				// Add field to conditional logic fields array.
 				$fields[] = array(
 					'value' => $field->id,
-					'label' => GFCommon::get_label( $field ),
+					'label' => GFCommon::get_label($field),
 				);
-
 			}
-
 		}
 
 		return $fields;
-
 	}
 
 	// # FEED PROCESSING -----------------------------------------------------------------------------------------------
@@ -826,20 +570,28 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function process_feed( $feed, $entry, $form ) {
-
+	public function process_feed($feed, $entry, $form)
+	{
+		$this->log_debug('$POST');
+		$this->log_debug( __METHOD__ . '(): post => ' . print_r( $_POST, true ) );
+		error_log('$POST');
+		error_log(print_r($_POST, true));
 		// Log that we are processing feed.
-		$this->log_debug( __METHOD__ . '(): Processing feed.' );
+		$this->log_debug(__METHOD__ . '(): Processing feed.');
 
 		// If unable to initialize API, log error and return.
-		if ( ! $this->initialize_api() ) {
-			$this->add_feed_error( esc_html__( 'Unable to process feed because API could not be initialized.', 'tmsm-gravityforms-probance' ),
-				$feed, $entry, $form );
+		if (!$this->initialize_api()) {
+			$this->add_feed_error(
+				esc_html__('Unable to process feed because API could not be initialized.', 'tmsm-gravityforms-probance'),
+				$feed,
+				$entry,
+				$form
+			);
 
 			$email = wp_mail(
-				get_option( 'admin_email' ),
-				wp_specialchars_decode( sprintf( __('TMSM Gravity Forms Dialog Insight on %s: API not initialized', 'tmsm-gravityforms-probance'), get_option( 'blogname' ) ) ),
-				wp_specialchars_decode( sprintf( __('TMSM Gravity Forms Dialog Insight on %s: API not initialized', 'tmsm-gravityforms-probance'), get_option( 'blogname' ) ) )
+				get_option('admin_email'),
+				wp_specialchars_decode(sprintf(__('TMSM Gravity Forms Probance on %s: API not initialized', 'tmsm-gravityforms-probance'), get_option('blogname'))),
+				wp_specialchars_decode(sprintf(__('TMSM Gravity Forms Probance on %s: API not initialized', 'tmsm-gravityforms-probance'), get_option('blogname')))
 			);
 
 			return $entry;
@@ -849,17 +601,17 @@ class GFProbance extends GFFeedAddOn {
 		$this->merge_var_name = 'email';
 
 		// Get field map values.
-		$field_map = $this->get_field_map_fields( $feed, 'mappedFields' );
+		$field_map = $this->get_field_map_fields($feed, 'mappedFields');
 
 		// Get optin map values.
-		$optin_map = $this->get_field_map_fields( $feed, 'optin_flag' );
+		$optin_map = $this->get_field_map_fields($feed, 'optin_flag');
 
 		// Get mapped email address.
-		$email = $this->get_field_value( $form, $entry, $field_map['email'] );
+		$email = $this->get_field_value($form, $entry, $field_map['email']);
 
 		// If email address is invalid, log error and return.
-		if ( GFCommon::is_invalid_or_empty_email( $email ) ) {
-			$this->add_feed_error( esc_html__( 'A valid Email address must be provided.', 'tmsm-gravityforms-probance' ), $feed, $entry, $form );
+		if (GFCommon::is_invalid_or_empty_email($email)) {
+			$this->add_feed_error(esc_html__('A valid Email address must be provided.', 'tmsm-gravityforms-probance'), $feed, $entry, $form);
 
 			return $entry;
 		}
@@ -873,22 +625,22 @@ class GFProbance extends GFFeedAddOn {
 		 * @param array $entry    The entry object.
 		 * @param array $feed     The feed object.
 		 */
-		$override_empty_fields = gf_apply_filters( 'gform_probance_override_empty_fields', array( $form['id'] ), true, $form, $entry, $feed );
+		$override_empty_fields = gf_apply_filters('gform_probance_override_empty_fields', array($form['id']), true, $form, $entry, $feed);
 		// Log that empty fields will not be overridden.
-		if ( ! $override_empty_fields ) {
-			$this->log_debug( __METHOD__ . '(): Empty fields will not be overridden.' );
+		if (!$override_empty_fields) {
+			$this->log_debug(__METHOD__ . '(): Empty fields will not be overridden.');
 		}
 
 		// Initialize array to store merge vars.
 		$merge_vars = array();
-        $merge_vars['customer_id'] = null;
+		$merge_vars['customer_id'] = null;
 
 
 		// Loop through field map.
-		foreach ( $field_map as $name => $field_id ) {
+		foreach ($field_map as $name => $field_id) {
 
 			// If no field is mapped, skip it.
-			if ( rgblank( $field_id ) ) {
+			if (rgblank($field_id)) {
 				continue;
 			}
 
@@ -896,87 +648,81 @@ class GFProbance extends GFFeedAddOn {
 			$this->merge_var_name = $name;
 
 			// Get field object.
-			$field = GFFormsModel::get_field( $form, $field_id );
+			$field = GFFormsModel::get_field($form, $field_id);
 
 			// Get field value.
-			$field_value = $this->get_field_value( $form, $entry, $field_id );
+			$field_value = $this->get_field_value($form, $entry, $field_id);
 
-			// If field value is empty and we are not overriding empty fields, skip it.
-//			if ( empty( $field_value ) && ( ! $override_empty_fields || ( is_object( $field ) && 'address' === $field->get_input_type() ) ) ) {
-//				continue;
-//			}
-            // If field value is null or empty not override the fields with empty values
-            if(empty($field_value)) {
-                continue;
-            }
-			$merge_vars[ $name ] = $field_value;
-
+			// If field value is null or empty not override the fields with empty values
+			if (empty($field_value)) {
+				continue;
+			}
+			$merge_vars[$name] = $field_value;
 		}
 
-            // Loop through optin map.
-            foreach ($optin_map as $name => $field_id) {
-            // If no field is mapped, skip it.
-            if (rgblank($field_id)) {
-                continue;
-            }
+		// Loop through optin map.
+		foreach ($optin_map as $name => $field_id) {
+			// If no field is mapped, skip it.
+			if (rgblank($field_id)) {
+				continue;
+			}
 
-            // Set merge var name to current field map name.
-            $this->merge_var_name = $name;
+			// Set merge var name to current field map name.
+			$this->merge_var_name = $name;
 
-            // Get field object.
-            $field = GFFormsModel::get_field($form, $field_id);
-            // Get field value.
-            $field_value = $this->get_field_value($form, $entry, $field_id);
+			// Get field object.
+			$field = GFFormsModel::get_field($form, $field_id);
+			// Get field value.
+			$field_value = $this->get_field_value($form, $entry, $field_id);
 
-            // If field value is empty and we are not overriding empty fields, skip it.
-            if (empty($field_value) && (!$override_empty_fields || (is_object($field) && 'address' === $field->get_input_type()))) {
-                continue;
-            }
+			// If field value is empty and we are not overriding empty fields, skip it.
+			if (empty($field_value) && (!$override_empty_fields || (is_object($field) && 'address' === $field->get_input_type()))) {
+				continue;
+			}
 
-        // Set a value to the optin flag for Probance
-            if ($field_value == '0' || $field_value == '1' ) {
-                $merge_vars[$name] = $field_value;
-            }
-        }
+			// Set a value to the optin flag for Probance
+			if ($field_value == '0' || $field_value == '1') {
+				$merge_vars[$name] = $field_value;
+			}
+		}
 
 		// Define initial member, member found and member status variables.
 		$member        = false;
 		$member_found  = false;
 		$member_status = null;
-        // TODO see if we can make the check if email all ready exist here ??
+		// TODO see if we can make the check if email all ready exist here ??
 		try {
 
-            $member_exist_response = $this->api->get_member_if_exist($email);
-            $member_response = json_decode($member_exist_response['body']);
-            // if response
-            if (isset($member_response->client)) {
-                $member_info_into_array = json_decode(json_encode($member_response->client), true);
-                //if the member has an id
-                $member_found = true;
-//                    error_log("MEMBER_EXIST");
-//                    error_log('member' . print_r($member_info_into_array, true));
-//                    error_log('customer_id' . print_r($member_info_into_array['customer_id'], true));
+			$member_exist_response = $this->api->get_member_if_exist($email);
+			error_log('MEMBER EXIST');
+			error_log(print_r($member_exist_response, true));
+			$member_response = $member_exist_response['body'];
+			// if response
+			if (isset($member_response['client'])) {
+				$member_info_into_array = ($member_response['client']);
+				error_log("MEMBERFOUND !!");
+				error_log(print_r($member_info_into_array, true));
+				$member_found = true;
 
-            }
+			}
 			// Log that we are checking if user is already subscribed to list.
-			$this->log_debug( __METHOD__ . "(): Checking to see if $email is already on the list (disabled)" );
-
-		} catch ( Exception $e ) {
+			$this->log_debug(__METHOD__ . "(): Checking to see if $email is already on the list (disabled)");
+		} catch (Exception $e) {
 
 			// If the exception code is not 404, abort feed processing.
-			if ( 404 !== $e->getCode() ) {
+			if (404 !== $e->getCode()) {
 
 				// Log that we could not get the member information.
-				$this->add_feed_error( sprintf( esc_html__( 'Unable to check if email address is already used by a member: %s',
-					'tmsm-gravityforms-probance' ), $e->getMessage() ), $feed, $entry, $form );
+				$this->add_feed_error(sprintf(esc_html__(
+					'Unable to check if email address is already used by a member: %s',
+					'tmsm-gravityforms-probance'
+				), $e->getMessage()), $feed, $entry, $form);
 
 				return $entry;
-
 			}
 
 			// Log member status.
-			$this->log_debug( __METHOD__ . "(): $email was not found on list." );
-
+			$this->log_debug(__METHOD__ . "(): $email was not found on list.");
 		}
 
 		/**
@@ -988,56 +734,45 @@ class GFProbance extends GFFeedAddOn {
 		 * @param array $entry                The entry object.
 		 * @param array $feed                 The feed object.
 		 */
-		$allow_resubscription = gf_apply_filters( array( 'gform_probance_allow_resubscription', $form['id'] ), true, $form, $entry, $feed );
+		$allow_resubscription = gf_apply_filters(array('gform_probance_allow_resubscription', $form['id']), true, $form, $entry, $feed);
 
 		// If member is unsubscribed and resubscription is not allowed, exit.
-		if ( 'unsubscribed' == $member_status && ! $allow_resubscription ) {
-			$this->log_debug( __METHOD__ . '(): User is unsubscribed and resubscription is not allowed.' );
+		if ('unsubscribed' == $member_status && !$allow_resubscription) {
+			$this->log_debug(__METHOD__ . '(): User is unsubscribed and resubscription is not allowed.');
 
 			return;
 		}
 
 		$action = $member_found ? 'update' : 'create';
-        // Auto update date for Probance. // TODO essai de la fonction avec l'email (test@testt.fr) pour le changement de date
-        if ( !$member_found) {
-            error_log('date : ');
-            $merge_vars['registration_date'] = date('Y-m-d');
-            error_log(print_r($merge_vars, true));
-        }
-		// Prepare request parameters.
-		$params = array(
-                        $merge_vars,
-		);
+		// Auto update date for Probance. 
+		if (!$member_found) {
 
+			$merge_vars['registration_date'] = date('Y-m-d');
+			error_log(print_r($merge_vars, true));
+		}
+		// Prepare request parameters.
+		$merge_vars;
+		$this->log_debug(__METHOD__ . "(): merge_vars :" . print_r($merge_vars, true));
 		try {
 
 			// Log the subscriber to be added or updated.
-			$this->log_debug( __METHOD__ . "(): Subscriber to be {$action}: " . $email );
+			$this->log_debug(__METHOD__ . "(): Subscriber to be {$action}: " . $email);
 			// Add or update subscriber.
-			$response = $this->api->update_list_member( $action, $merge_vars, );
-//			$response = $this->api->update_list_member( $params );
-			//$this->log_debug( __METHOD__ . "(): Params for {$action}: " . print_r( $params, true ) );
-			$this->log_debug( __METHOD__ . "(): Params for {$action}: " . json_encode( $params ) );
-			$this->log_debug( __METHOD__ . "(): Response for {$action}: " . print_r( $response, true ));
-
+			$response = $this->api->update_list_member($merge_vars, $action);
 			// Log that the subscription was added or updated.
-			$this->log_debug( __METHOD__ . "(): Subscriber successfully {$action}." );
-
-		} catch ( Exception $e ) {
+			$this->log_debug(__METHOD__ . "(): Subscriber successfully {$action}.");
+		} catch (Exception $e) {
 
 			// Log that subscription could not be added or updated.
-			$this->add_feed_error( sprintf( esc_html__( 'Unable to add/update subscriber: %s', 'tmsm-gravityforms-probance' ),
-				$e->getMessage() ), $feed, $entry, $form );
+			$this->add_feed_error(sprintf(
+				esc_html__('Unable to add/update subscriber: %s', 'tmsm-gravityforms-probance'),
+				$e->getMessage()
+			), $feed, $entry, $form);
 
-			// Log field errors.
-			if ( $e->hasErrors() ) {
-				$this->log_error( __METHOD__ . '(): Field errors when attempting subscription: ' . print_r( $e->getErrors(), true ) );
-			}
+	
 
 			return;
-
 		}
-
 	}
 
 	/**
@@ -1059,107 +794,99 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-	public function get_field_value( $form, $entry, $field_id ) {
+	public function get_field_value($form, $entry, $field_id)
+	{
 
 		// Set initial field value.
 		$field_value = '';
 
 		// Set field value based on field ID.
-		switch ( strtolower( $field_id ) ) {
+		switch (strtolower($field_id)) {
 
-			// Form title.
+				// Form title.
 			case 'form_title':
-				$field_value = rgar( $form, 'title' );
+				$field_value = rgar($form, 'title');
 				break;
 
-			// Entry creation date.
+				// Entry creation date.
 			case 'date_created':
 
 				// Get entry creation date from entry.
-				$date_created = rgar( $entry, strtolower( $field_id ) );
+				$date_created = rgar($entry, strtolower($field_id));
 
 				// If date is not populated, get current date.
-				$field_value = empty( $date_created ) ? gmdate( 'Y-m-d H:i:s' ) : $date_created;
+				$field_value = empty($date_created) ? gmdate('Y-m-d H:i:s') : $date_created;
 				break;
 
-			// Entry IP and source URL.
+				// Entry IP and source URL.
 			case 'ip':
 			case 'source_url':
-				$field_value = rgar( $entry, strtolower( $field_id ) );
+				$field_value = rgar($entry, strtolower($field_id));
 				break;
 
 			default:
 
 				// Get field object.
-				$field = GFFormsModel::get_field( $form, $field_id );
+				$field = GFFormsModel::get_field($form, $field_id);
 
-				if ( is_object( $field ) ) {
+				if (is_object($field)) {
 
 					// Check if field ID is integer to ensure field does not have child inputs.
-					$is_integer = $field_id == intval( $field_id );
+					$is_integer = $field_id == intval($field_id);
 
 					// Get field input type.
-					$input_type = GFFormsModel::get_input_type( $field );
+					$input_type = GFFormsModel::get_input_type($field);
 
-					if ( $is_integer && 'address' === $input_type ) {
+					if ($is_integer && 'address' === $input_type) {
 
 						// Get full address for field value.
-						$field_value = $this->get_full_address( $entry, $field_id );
-
-					} else if ( $is_integer && 'name' === $input_type ) {
+						$field_value = $this->get_full_address($entry, $field_id);
+					} else if ($is_integer && 'name' === $input_type) {
 
 						// Get full name for field value.
-						$field_value = $this->get_full_name( $entry, $field_id );
-
-					} else if ( $is_integer && 'checkbox' === $input_type ) {
+						$field_value = $this->get_full_name($entry, $field_id);
+					} else if ($is_integer && 'checkbox' === $input_type) {
 
 						// Initialize selected options array.
 						$selected = array();
 
 						// Loop through checkbox inputs.
-						foreach ( $field->inputs as $input ) {
+						foreach ($field->inputs as $input) {
 							$index = (string) $input['id'];
-							if ( ! rgempty( $index, $entry ) ) {
-								$selected[] = $this->maybe_override_field_value( rgar( $entry, $index ), $form, $entry, $index );
+							if (!rgempty($index, $entry)) {
+								$selected[] = $this->maybe_override_field_value(rgar($entry, $index), $form, $entry, $index);
 							}
 						}
 
 						// Convert selected options array to comma separated string.
-						$field_value = implode( ', ', $selected );
-
-					} else if ( 'phone' === $input_type && $field->phoneFormat == 'standard' ) {
+						$field_value = implode(', ', $selected);
+					} else if ('phone' === $input_type && $field->phoneFormat == 'standard') {
 
 						// Get field value.
-						$field_value = rgar( $entry, $field_id );
+						$field_value = rgar($entry, $field_id);
 
 						// Reformat standard format phone to match DialogInsight format.
 						// Format: NPA-NXX-LINE (404-555-1212) when US/CAN.
-						if ( ! empty( $field_value ) && preg_match( '/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/', $field_value, $matches ) ) {
-							$field_value = sprintf( '%s-%s-%s', $matches[1], $matches[2], $matches[3] );
+						if (!empty($field_value) && preg_match('/^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/', $field_value, $matches)) {
+							$field_value = sprintf('%s-%s-%s', $matches[1], $matches[2], $matches[3]);
 						}
-
 					} else {
 
 						// Use export value if method exists for field.
-						if ( is_callable( array( 'GF_Field', 'get_value_export' ) ) ) {
-							$field_value = $field->get_value_export( $entry, $field_id );
+						if (is_callable(array('GF_Field', 'get_value_export'))) {
+							$field_value = $field->get_value_export($entry, $field_id);
 						} else {
-							$field_value = rgar( $entry, $field_id );
+							$field_value = rgar($entry, $field_id);
 						}
-
 					}
-
 				} else {
 
 					// Get field value from entry.
-					$field_value = rgar( $entry, $field_id );
-
+					$field_value = rgar($entry, $field_id);
 				}
-
 		}
 
-		return $this->maybe_override_field_value( $field_value, $form, $entry, $field_id );
-
+		return $this->maybe_override_field_value($field_value, $form, $entry, $field_id);
 	}
 
 	/**
@@ -1175,11 +902,18 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return mixed|string
 	 */
-	public function maybe_override_field_value( $field_value, $form, $entry, $field_id ) {
+	public function maybe_override_field_value($field_value, $form, $entry, $field_id)
+	{
 
-		return gf_apply_filters( 'gform_probance_field_value', array( $form['id'], $field_id ), $field_value, $form['id'], $field_id, $entry,
-			$this->merge_var_name );
-
+		return gf_apply_filters(
+			'gform_probance_field_value',
+			array($form['id'], $field_id),
+			$field_value,
+			$form['id'],
+			$field_id,
+			$entry,
+			$this->merge_var_name
+		);
 	}
 
 	/**
@@ -1197,33 +931,34 @@ class GFProbance extends GFFeedAddOn {
 	 *
 	 * @return bool|null
 	 */
-	public function initialize_api( $username = null ) {
+	public function initialize_api($username = null)
+	{
 
 		$password = null;
 
 		// If API is alredy initialized, return true.
-		if ( ! is_null( $this->api ) ) {
+		if (!is_null($this->api)) {
 			return true;
 		}
-        $username = $this->get_plugin_setting( 'username' );
-		$password  = $this->get_plugin_setting( 'password' );
+		$username = $this->get_plugin_setting('username');
+		$password  = $this->get_plugin_setting('password');
 
-		$this->log_debug( __METHOD__ . '(): Username:' . $username );
-		$this->log_debug( __METHOD__ . '(): Password:' . $password );
+		$this->log_debug(__METHOD__ . '(): Username:' . $username);
+		$this->log_debug(__METHOD__ . '(): Password:' . $password);
 
 		// If the API key is blank, do not run a validation check.
-		if ( rgblank( $username) || rgblank( $password ) ) {
-			$this->log_debug( __METHOD__ . '(): API Key or Key ID empty.' );
+		if (rgblank($username) || rgblank($password)) {
+			$this->log_debug(__METHOD__ . '(): API Key or Key ID empty.');
 
 			return null;
 		}
 
 		// Log validation step.
-		$this->log_debug( __METHOD__ . '(): Validating API Info.' );
+		$this->log_debug(__METHOD__ . '(): Validating API Info.');
 
 		// Setup a new Probance object with the API credentials.
-		$probance = new GF_Probance_API( $username, $password );
-        $this->log_debug(__METHOD__ . '(): Return object'. var_export($probance,true));
+		$probance = new GF_Probance_API($username, $password);
+		$this->log_debug(__METHOD__ . '(): Return object' . var_export($probance, true));
 		try {
 
 			// Retrieve account information.
@@ -1232,17 +967,14 @@ class GFProbance extends GFFeedAddOn {
 			$this->api = $probance;
 
 			// Log that authentication test passed.
-			$this->log_debug( __METHOD__ . '(): Probance successfully authenticated.' );
+			$this->log_debug(__METHOD__ . '(): Probance successfully authenticated.');
 			return true;
-
-		} catch ( Exception $e ) {
+		} catch (Exception $e) {
 
 			// Log that authentication test failed.
-			$this->log_error( __METHOD__ . '(): Unable to authenticate with Probance; ' . $e->getMessage() );;
+			$this->log_error(__METHOD__ . '(): Unable to authenticate with Probance; ' . $e->getMessage());;
 
 			return false;
-
 		}
-
 	}
 }
