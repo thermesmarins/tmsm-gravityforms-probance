@@ -673,7 +673,6 @@ class GFProbance extends GFFeedAddOn
 		$member        = false;
 		$member_found  = false;
 		$member_status = null;
-		// TODO see if we can make the check if email all ready exist here ??
 		try {
 
 			$member_exist_response = $this->api->get_member_if_exist($email);
