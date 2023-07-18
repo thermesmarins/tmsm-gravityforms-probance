@@ -432,28 +432,11 @@ class GFProbance extends GFFeedAddOn
 	{
 		$optin_map['optin_flag']  =  array(
 			'name' => 'optin_flag',
+			'label'    => esc_html__('Customer Consent', 'tmsm-gravityforms-probance'),
 			'fields' => array(
 				array(
-					'name'     => 'updateContact',
-					'label'    => esc_html__('Update Contact', 'tmsm-gravityforms-probance'),
+					'name'     => 'customer consent',
 					'type'     => 'radio',
-					//                    'checkbox' => array(
-					//                        'name'  => 'updateContactEnable',
-					//                        'label' => esc_html__( 'Update Contact if already exists', 'sometextdomain' ),
-					//                    ),
-					//                    'select'   => array(
-					//                        'name'    => 'updateContactAction',
-					//                        'choices' => array(
-					//                            array(
-					//                                'label' => esc_html__( 'and replace existing data', 'sometextdomain' ),
-					//                                'value' => 'replace'
-					//                            ),
-					//                            array(
-					//                                'label' => esc_html__( 'and append new data', 'sometextdomain' ),
-					//                                'value' => 'append'
-					//                            )
-					//                        )
-					//                    )
 				)
 			)
 		);
