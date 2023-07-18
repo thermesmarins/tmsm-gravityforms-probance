@@ -557,8 +557,6 @@ class GFProbance extends GFFeedAddOn
 	{
 		$this->log_debug('$POST');
 		$this->log_debug( __METHOD__ . '(): post => ' . print_r( $_POST, true ) );
-		error_log('$POST');
-		error_log(print_r($_POST, true));
 		// Log that we are processing feed.
 		$this->log_debug(__METHOD__ . '(): Processing feed.');
 
@@ -676,15 +674,16 @@ class GFProbance extends GFFeedAddOn
 		try {
 
 			$member_exist_response = $this->api->get_member_if_exist($email);
-			error_log('MEMBER EXIST');
-			error_log(print_r($member_exist_response, true));
 			$member_response = $member_exist_response['body'];
+			error_log('MEMBER_RESPONSE RESPONSE !');
+				error_log(print_r($member_response, true));
 			// if response
 			if (isset($member_response['client'])) {
 				$member_info_into_array = ($member_response['client']);
-				error_log("MEMBERFOUND !!");
+				error_log('MEMBER ARRAY RESPONSE !');
 				error_log(print_r($member_info_into_array, true));
 				$member_found = true;
+				$member_status = $member_info_into_array['optin_flag'];
 
 			}
 			// Log that we are checking if user is already subscribed to list.
@@ -727,11 +726,15 @@ class GFProbance extends GFFeedAddOn
 
 		$action = $member_found ? 'update' : 'create';
 		// Auto update date for Probance. 
-		if (!$member_found) {
+			if (!$member_found || $member_status != $merge_vars['optin_flag'])
+                {
+                    error_log('NEW ONE TO COME OR MIND CHANGING !!!!');
+					// Set datetime to now and timezone to Europe/Paris 
+                   $serverDateTime = new DateTime('now', new DateTimeZone('Europe/Paris'));
+                   $date_to_time =  $serverDateTime->format('Y-m-d\TH:i:s'.'.'.'000'.'O');
+                    $merge_vars['registration_date'] = $date_to_time;
+                }
 
-			$merge_vars['registration_date'] = date('Y-m-d');
-			error_log(print_r($merge_vars, true));
-		}
 		// Prepare request parameters.
 		$merge_vars;
 		$this->log_debug(__METHOD__ . "(): merge_vars :" . print_r($merge_vars, true));
@@ -930,7 +933,7 @@ class GFProbance extends GFFeedAddOn
 
 		// If the API key is blank, do not run a validation check.
 		if (rgblank($username) || rgblank($password)) {
-			$this->log_debug(__METHOD__ . '(): API Key or Key ID empty.');
+			$this->log_debug(__METHOD__ . '(): Username or Password empty.');
 
 			return null;
 		}

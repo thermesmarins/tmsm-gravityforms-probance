@@ -156,17 +156,9 @@ class GF_Probance_API {
             'Accept' => 'application/json',
             'Authorization' => "Basic {$credentials}",
         );
-        error_log(print_r($request_url, true));
-        error_log('%%%% METHOD %%% :');
-        error_log(print_r($method, true));
 
 		if ($method != 'GET') {
-			           error_log('DATA POST');
-			           error_log(print_r($data, true));
 						$json_data = json_encode($data);
-			           error_log('$json_data');
-			           error_log($json_data);
-			
 						$response = wp_remote_request(
 							$request_url,
 							array(
@@ -200,6 +192,8 @@ class GF_Probance_API {
 
 		// Decode response body.
 		$response['body'] = json_decode( $response['body'], true );
+		error_log('$RESPONSE BODY').
+		error_log(print_r($response['body'] , true));
 		// Get the response code.
 		$response_code = wp_remote_retrieve_response_code( $response );
 
