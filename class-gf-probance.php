@@ -730,8 +730,11 @@ class GFProbance extends GFFeedAddOn
                 {
                     error_log('NEW ONE TO COME OR MIND CHANGING !!!!');
 					// Set datetime to now and timezone to Europe/Paris 
-                   $serverDateTime = new DateTime('now', new DateTimeZone('Europe/Paris'));
-                   $date_to_time =  $serverDateTime->format('Y-m-d\TH:i:s'.'.'.'000'.'O');
+					// $serverDateTime = new Datetime('now');
+					$t = microtime(true);
+					$micro = sprintf("%06d",($t - floor($t)) * 10);
+					$serverDateTime = new DateTime('now', new DateTimeZone('Europe/Paris'));
+					$date_to_time =  $serverDateTime->format('Y-m-d\TH:i:s.vO');
                     $merge_vars['registration_date'] = $date_to_time;
                 }
 
