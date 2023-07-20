@@ -359,7 +359,7 @@ class GFProbance extends GFFeedAddOn
 							esc_html__('Conditional Logic', 'tmsm-gravityforms-probance'),
 							esc_html__(
 								'When conditional logic is enabled, form submissions will only be exported to Probance when the conditions are met. When disabled all form submissions will be exported.',
-								'tmsm-gravityforms-dialoginsight'
+								'tmsm-gravityforms-probance'
 							)
 						),
 					),
