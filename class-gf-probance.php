@@ -392,14 +392,14 @@ class GFProbance extends GFFeedAddOn
 			),
 			array(
 				'name'          => 'name1',
-				'label'         => esc_html__('Last Name', 'tmsm-gravityforms-probance'),
+				'label'         => esc_html__('First Name', 'tmsm-gravityforms-probance'),
 				'required'      => false,
 				'field_type'    => array('name', 'text', 'hidden'),
 				'default_value' => $this->get_first_field_by_type('name', 3),
 			),
 			array(
 				'name'          => 'name2',
-				'label'         => esc_html__('First Name', 'tmsm-gravityforms-probance'),
+				'label'         => esc_html__('Last Name', 'tmsm-gravityforms-probance'),
 				'required'      => false,
 				'field_type'    => array('name', 'text', 'hidden'),
 				'default_value' => $this->get_first_field_by_type('name', 6),
@@ -556,7 +556,7 @@ class GFProbance extends GFFeedAddOn
 	public function process_feed($feed, $entry, $form)
 	{
 		$this->log_debug('$POST');
-		$this->log_debug( __METHOD__ . '(): post => ' . print_r( $_POST, true ) );
+		$this->log_debug(__METHOD__ . '(): post => ' . print_r($_POST, true));
 		// Log that we are processing feed.
 		$this->log_debug(__METHOD__ . '(): Processing feed.');
 
@@ -676,7 +676,7 @@ class GFProbance extends GFFeedAddOn
 			$member_exist_response = $this->api->get_member_if_exist($email);
 			$member_response = $member_exist_response['body'];
 			error_log('MEMBER_RESPONSE RESPONSE !');
-				error_log(print_r($member_response, true));
+			error_log(print_r($member_response, true));
 			// if response
 			if (isset($member_response['client'])) {
 				$member_info_into_array = ($member_response['client']);
@@ -684,7 +684,6 @@ class GFProbance extends GFFeedAddOn
 				error_log(print_r($member_info_into_array, true));
 				$member_found = true;
 				$member_status = $member_info_into_array['optin_flag'];
-
 			}
 			// Log that we are checking if user is already subscribed to list.
 			$this->log_debug(__METHOD__ . "(): Checking to see if $email is already on the list (disabled)");
@@ -726,14 +725,13 @@ class GFProbance extends GFFeedAddOn
 
 		$action = $member_found ? 'update' : 'create';
 		// Auto update date for Probance. 
-			if (!$member_found || $member_status != $merge_vars['optin_flag'])
-                {
-                    error_log('NEW ONE TO COME OR MIND CHANGING !!!!');
-					// Set datetime to now and timezone to Europe/Paris 
-					$serverDateTime = new DateTime('now', new DateTimeZone('Europe/Paris'));
-					$date_to_time =  $serverDateTime->format('Y-m-d\TH:i:s.vO');
-                    $merge_vars['registration_date'] = $date_to_time;
-                }
+		if (!$member_found || $member_status != $merge_vars['optin_flag']) {
+			// error_log('NEW ONE TO COME OR MIND CHANGING !!!!');
+			// // Set datetime to now and timezone to Europe/Paris 
+			// $serverDateTime = new DateTime('now', new DateTimeZone('Europe/Paris'));
+			// $date_to_time =  $serverDateTime->format('Y-m-d\TH:i:s.vO');
+			// $merge_vars['registration_date'] = $date_to_time;
+		}
 
 		// Prepare request parameters.
 		$merge_vars;
@@ -754,7 +752,7 @@ class GFProbance extends GFFeedAddOn
 				$e->getMessage()
 			), $feed, $entry, $form);
 
-	
+
 
 			return;
 		}
